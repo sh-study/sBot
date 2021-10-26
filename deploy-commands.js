@@ -17,7 +17,7 @@ const rest = new Rest.REST({version: '9'}).setToken(config.token);
     try {
         console.log("Started refreshing application commands for jangchoongz server.");
 
-        const jc_guilds = [config.guild_id_jc, config.guild_id_ds];
+        const jc_guilds = [config.guild_id_jc, config.guild_id_ds, config.guild_id_mannam];
         for (const guild of jc_guilds) {
             await rest.put(
                 Api.Routes.applicationGuildCommands(config.client_id, guild),
