@@ -118,9 +118,10 @@ client.on("interactionCreate", async interaction => {
                     return interaction.update({content: `You've bought: ${buyItem.name}.`, components: []});
                 case "sellItem":
                     const sellItem = await dbObjects.UserItems.findOne({where: {user_id: interaction.user.id, item_id: {[Sequelize.Op.like]: interaction.values}}});
-                    if (!sellItem) return interaction.update({content: `You don't have ${interaction.values}.`, components: []});
-
                     const shopItem = await dbObjects.CurrencyShop.findOne({where: {id: {[Sequelize.Op.like]: interaction.values}}});
+
+                    if (!sellItem) return interaction.update({content: `You don't have ${shopItem.name}.`, components: []});
+
                     currency.add(interaction.user.id, shopItem.cost);
                     await user.deleteItem(sellItem);
 
