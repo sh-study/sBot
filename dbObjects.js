@@ -23,15 +23,16 @@ Reflect.defineProperty(Users.prototype, "addItem", {
             userItem.amount += 1;
             return userItem.save();
         }
-        
-        return UserItems.create({user_id: this.user_id, item_id: item.id, name: item.name, amount: 1});
+
+        const data = {user_id: this.user_id, item_id: item.id, name: item.name, amount: 1};
+
+        return UserItems.create(data);
     }
 
 });
 
 Reflect.defineProperty(Users.prototype, "deleteItem", {
     value: async function deleteItem(item) {
-
         if (item.amount > 1) {
             item.amount -= 1;
             return item.save();
