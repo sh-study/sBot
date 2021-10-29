@@ -4,9 +4,9 @@ const Api = require("discord-api-types/v9");
 const config = require("./config.json");
 
 const cmd_jc = [];
-const commandFiles = fs.readdirSync("./commands_jc").filter(file => file.endsWith(".js"));
+const commandFiles_jc = fs.readdirSync("./commands_jc").filter(file => file.endsWith(".js"));
 
-for (const file of commandFiles) {
+for (const file of commandFiles_jc) {
     const command = require(`./commands_jc/${file}`);
     cmd_jc.push(command.data.toJSON());
 }
