@@ -66,7 +66,7 @@ module.exports = {
 
                 if (!items?.length) return interaction.reply(`${inventoryTarget.displayName} has nothing!`);
                 
-                return interaction.reply(Discord.Formatters.codeBlock(items.map(i => `${i.name} ${i.amount}`).join('\n')));
+                return interaction.reply(`${inventoryTarget.displayName} ${Discord.Formatters.codeBlock(items.map(i => `${i.name} ${i.amount}`).join('\n'))}`);
             case "transfer":
                 const currentAmount = currency.getBalance(interaction.user.id);
                 const transferAmount = interaction.options.getInteger("amount");
