@@ -87,7 +87,7 @@ client.on("interactionCreate", async interaction => {
 
             try {
                 if (command.data.name == "currency") {
-                    return await command.execute(interaction, currency, client);
+                    return await command.execute(interaction, currency);
                 }
                 await command.execute(interaction);
             } catch (error) {

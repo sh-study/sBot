@@ -42,19 +42,12 @@ module.exports = {
             .addSubcommand(subcommand => subcommand
                 .setName("leaderboard")
                 .setDescription("Displays the leaderboard.")),
-    async execute(interaction, currency, client) {
-        const itemOptions = [
-            {
-                label: "Tea",
-                value: "1"
-            }, {
-                label: "Cookie",
-                value: "2"
-            }, {
-                label: "Coffee",
-                value: "3"
-            }
-        ];
+    async execute(interaction, currency) {
+        const items = await dbObjects.CurrencyShop.findAll()
+        const itemOptions = items.map(i => {
+            return {label: `${i.name}`, value: `${i.id}`};
+        });
+
         switch (interaction.options.getSubcommand()) {
             case "balance":
                 const balanceTarget = interaction.options.getMember("user") ?? interaction.member;
