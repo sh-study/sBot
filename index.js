@@ -24,8 +24,17 @@ const intents = [
 ];
 const client = new Discord.Client({intents: intents});
 
+const commandFileInit = path => {
+    const commandFiles = fs.readdirSync(path).filter(file => file.endsWith(".js"));
+    for (const file of commandFiles) {
+        const command = require(path + `/${file}`);
+        client.commands.set(command.data.name, command);
+    }
+};
+
 client.commands = new Discord.Collection();
-const commandFiles_jc = fs.readdirSync("./commands_jc").filter(file => file.endsWith(".js"));
+commandFileInit("./commands_jc");
+commandFileInit("./commands_official");
 
 const currency = new Discord.Collection();
 
@@ -51,11 +60,6 @@ Reflect.defineProperty(currency, "getBalance", {
         return user ? user.balance : 0;
     }
 });
-
-for (const file of commandFiles_jc) {
-    const command = require(`./commands_jc/${file}`);
-    client.commands.set(command.data.name, command);
-}
 
 client.once("ready", async () => {
     client.user.setPresence({
