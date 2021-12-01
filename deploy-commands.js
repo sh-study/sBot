@@ -26,7 +26,7 @@ const rest = new Rest.REST({version: '9'}).setToken(config.token);
     try {
         const ofl_guilds = [config.guild_id_official];
         const jc_guilds = [config.guild_id_jc, config.guild_id_mannam];
-        const demo_guilds = [config.guild_id_ds];
+        const demo_guilds = [config.guild_id_demo];
 
         const parts = [ofl_guilds, jc_guilds, demo_guilds];
         let cmd = [];

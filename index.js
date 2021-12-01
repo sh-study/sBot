@@ -35,6 +35,7 @@ const commandFileInit = path => {
 client.commands = new Discord.Collection();
 commandFileInit("./commands_jc");
 commandFileInit("./commands_official");
+commandFileInit("./commands_demo");
 
 const currency = new Discord.Collection();
 
