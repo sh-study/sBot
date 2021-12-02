@@ -3,6 +3,7 @@ const fs = require("fs");
 const config = require("./config.json");
 const dbObjects = require("./dbObjects.js");
 const Sequelize = require("sequelize");
+require("dotenv").config();
 
 const flags = Discord.Intents.FLAGS;
 const intents = [
@@ -136,4 +137,4 @@ client.on("interactionCreate", async interaction => {
     }
 });
 
-client.login(config.token);
+client.login(process.env.token);
