@@ -74,6 +74,7 @@ client.once("ready", async () => {
     const storedBalances = await dbObjects.Users.findAll();
     storedBalances.forEach(b => currency.set(b.user_id, b));
 
+    process.send("ready");
     console.log("Ready!");
 });
 
