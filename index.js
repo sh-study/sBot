@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 const fs = require("fs");
-const config = require("./config.json");
 const dbObjects = require("./dbObjects.js");
 const Sequelize = require("sequelize");
 require("dotenv").config();
@@ -75,7 +74,6 @@ client.once("ready", async () => {
     const storedBalances = await dbObjects.Users.findAll();
     storedBalances.forEach(b => currency.set(b.user_id, b));
 
-    process.send("ready");
     console.log("Ready!");
 });
 
