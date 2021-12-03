@@ -50,10 +50,10 @@ module.exports = {
 
         switch (interaction.options.getSubcommand()) {
             case "balance":
-                const balanceTarget = interaction.options.getMember("user") ?? interaction.member;
+                const balanceTarget = await interaction.options.getMember("user") ?? await interaction.member;
                 return interaction.reply(`${balanceTarget.displayName} has ${interaction.client.currency.getBalance(balanceTarget.id)}💰`);
             case "inventory":
-                const inventoryTarget = interaction.options.getMember("user") ?? interaction.member;
+                const inventoryTarget = await interaction.options.getMember("user") ?? await interaction.member;
                 const user = await dbObjects.Users.findOne({where: {user_id: inventoryTarget.id}})
                 const items = await user?.getItems();
 
@@ -61,17 +61,17 @@ module.exports = {
                 
                 return interaction.reply(`${inventoryTarget.displayName} has ${Discord.Formatters.codeBlock(items.map(i => `${i.name} ${i.amount}`).join('\n'))}`);
             case "transfer":
-                const currentAmount = client.currency.getBalance(interaction.user.id);
-                const transferAmount = interaction.options.getInteger("amount");
-                const transferTarget = interaction.options.getMember("user");
+                const currentAmount = await client.currency.getBalance(interaction.user.id);
+                const transferAmount = await interaction.options.getInteger("amount");
+                const transferTarget = await interaction.options.getMember("user");
 
                 if (transferTarget.user.bot) return interaction.reply("You can't transfer your money to the bot.")
 
                 if (transferAmount > currentAmount) return interaction.reply(`Sorry ${interaction.member.displayName}, you only have ${currentAmount}💰.`);
                 if (transferAmount <= 0) return interaction.reply(`Please enter an amount greater than zero, ${interaction.member.displayName}.`);
 
-                interaction.client.currency.add(interaction.user.id, -transferAmount);
-                interaction.client.currency.add(transferTarget.id, transferAmount);
+                await interaction.client.currency.add(interaction.user.id, -transferAmount);
+                await interaction.client.currency.add(transferTarget.id, transferAmount);
 
                 return interaction.reply(`Successfully transferred ${transferAmount}💰 to ${transferTarget.displayName}. Your current balance is ${client.currency.getBalance(interaction.user.id)}💰`);
             case "buy":
@@ -99,12 +99,12 @@ module.exports = {
                 let block = null;
                 if (interaction.client.currency.size) {
                     block = Discord.Formatters.codeBlock(
-                        interaction.client.currency.sort((a, b) => b.balance - a.balance)
+                        await interaction.client.currency.sort((a, b) => b.balance - a.balance)
                             .filter(user => interaction.guild.members.cache.has(user.user_id))
                             .first(10)
                             .map((user, position) => `(${position + 1}) ${interaction.guild.members.cache.get(user.user_id).displayName}: ${user.balance}💰`)
                             .join("\n")
-                    )
+                    );
                 }
                 return interaction.reply(block ?? "There's nothing to display on leaderboard.")
         }
