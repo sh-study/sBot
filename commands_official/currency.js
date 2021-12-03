@@ -1,6 +1,7 @@
 const Builder = require("@discordjs/builders");
 const Discord = require("discord.js");
 const dbObjects = require("../dbObjects.js");
+const currency = require("../index.js");
 
 module.exports = {
     data:
@@ -42,7 +43,7 @@ module.exports = {
             .addSubcommand(subcommand => subcommand
                 .setName("leaderboard")
                 .setDescription("Displays the leaderboard.")),
-    async execute(interaction, currency) {
+    async execute(interaction) {
         const items = await dbObjects.CurrencyShop.findAll()
         const itemOptions = items.map(i => {
             return {label: `${i.name}`, value: `${i.id}`};

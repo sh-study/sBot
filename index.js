@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const dbObjects = require("./dbObjects.js");
-const Sequelize = require("sequelize");
 require("dotenv").config();
 
 const flags = Discord.Intents.FLAGS;
@@ -24,6 +23,8 @@ const intents = [
 ];
 const client = new Discord.Client({intents: intents});
 
+client.commands = new Discord.Collection();
+
 const commandFileInit = path => {
     const commandFiles = fs.readdirSync(path).filter(file => file.endsWith(".js"));
     for (const file of commandFiles) {
@@ -32,12 +33,13 @@ const commandFileInit = path => {
     }
 };
 
-client.commands = new Discord.Collection();
 commandFileInit("./commands_jc");
 commandFileInit("./commands_official");
 commandFileInit("./commands_demo");
 
 const currency = new Discord.Collection();
+
+module.exports = currency;
 
 Reflect.defineProperty(currency, "add", {
     value: async function add(id, amount) {
@@ -62,77 +64,22 @@ Reflect.defineProperty(currency, "getBalance", {
     }
 });
 
-client.once("ready", async () => {
-    client.user.setPresence({
-        activities: [{
-            name: "Spotify",
-            type: "LISTENING"
-        }],
-        status: "online"
-    });
+const eventFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"));
 
-    const storedBalances = await dbObjects.Users.findAll();
-    storedBalances.forEach(b => currency.set(b.user_id, b));
-
-    console.log("Ready!");
-});
+for (const file of eventFiles) {
+    const event = require(`./events/${file}`);
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args));
+    } else {
+        client.on(event.name, (...args) => event.execute(...args));
+    }
+}
 
 client.on("messageCreate", async message => {
     if (message.author.bot) return;
 
     if (message.content == "__test") return currency.add(message.author.id, 30);
     currency.add(message.author.id, 1);
-});
-
-client.on("interactionCreate", async interaction => {
-    switch (true) {
-        case interaction.isCommand():
-            const command = client.commands.get(interaction.commandName);
-            if (!command) return;
-
-            try {
-                if (command.data.name == "currency") {
-                    return await command.execute(interaction, currency);
-                }
-                await command.execute(interaction);
-            } catch (error) {
-                console.error(error);
-                return interaction.reply({content: "There was an error while executing this command!", ephemeral: true});
-            }
-
-            break;
-        case interaction.isButton():
-            switch (interaction.customId) {
-                case "heart":
-                    return interaction.reply("💖");
-            }
-            break;
-        case interaction.isSelectMenu():
-            const user = await dbObjects.Users.findOne({where: {user_id: interaction.user.id}});
-            switch (interaction.customId) {
-                case "buyItem":
-                    const buyItem = await dbObjects.CurrencyShop.findOne({where: {id: {[Sequelize.Op.like]: interaction.values}}});
-
-                    if (buyItem.cost > currency.getBalance(interaction.user.id)) {
-                        return interaction.update({content: `You currently have ${currency.getBalance(interaction.user.id)}, but the ${buyItem.name} costs ${buyItem.cost}💰.`, components: []});
-                    }
-
-                    currency.add(interaction.user.id, -buyItem.cost);
-                    await user?.addItem(buyItem);
-
-                    return interaction.update({content: `You've bought: ${buyItem.name}.`, components: []});
-                case "sellItem":
-                    const sellItem = await dbObjects.UserItems.findOne({where: {user_id: interaction.user.id, item_id: {[Sequelize.Op.like]: interaction.values}}});
-                    const shopItem = await dbObjects.CurrencyShop.findOne({where: {id: {[Sequelize.Op.like]: interaction.values}}});
-
-                    if (!sellItem) return interaction.update({content: `You don't have ${shopItem.name}.`, components: []});
-
-                    currency.add(interaction.user.id, shopItem.cost);
-                    await user.deleteItem(sellItem);
-
-                    return interaction.update({content: `You've sold: ${sellItem.name}.`, components: []});
-            }
-    }
 });
 
 client.login(process.env.token);
