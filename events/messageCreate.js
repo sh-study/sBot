@@ -7,4 +7,4 @@ module.exports = {
         if (message.content == "__test") return client.currency.add(message.author.id, 30);
         message.client.currency.add(message.author.id, 1);
     }
-}
+};

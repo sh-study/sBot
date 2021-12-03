@@ -75,11 +75,4 @@ for (const file of eventFiles) {
     }
 }
 
-client.on("messageCreate", async message => {
-    if (message.author.bot) return;
-
-    if (message.content == "__test") return client.currency.add(message.author.id, 30);
-    client.currency.add(message.author.id, 1);
-});
-
 client.login(process.env.token);
