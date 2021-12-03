@@ -34,7 +34,7 @@ module.exports = {
                             return interaction.update({content: `You currently have ${client.currency.getBalance(interaction.user.id)}, but the ${buyItem.name} costs ${buyItem.cost}💰.`, components: []});
                         }
     
-                        client.currency.add(interaction.user.id, -buyItem.cost);
+                        interaction.client.currency.add(interaction.user.id, -buyItem.cost);
                         await user?.addItem(buyItem);
     
                         return interaction.update({content: `You've bought: ${buyItem.name}.`, components: []});
@@ -44,7 +44,7 @@ module.exports = {
     
                         if (!sellItem) return interaction.update({content: `You don't have ${shopItem.name}.`, components: []});
     
-                        client.currency.add(interaction.user.id, shopItem.cost);
+                        interaction.client.currency.add(interaction.user.id, shopItem.cost);
                         await user.deleteItem(sellItem);
     
                         return interaction.update({content: `You've sold: ${sellItem.name}.`, components: []});
