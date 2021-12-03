@@ -99,7 +99,7 @@ module.exports = {
                 let block = null;
                 if (interaction.client.currency.size) {
                     block = Discord.Formatters.codeBlock(
-                        client.currency.sort((a, b) => b.balance - a.balance)
+                        interaction.client.currency.sort((a, b) => b.balance - a.balance)
                             .filter(user => interaction.guild.members.cache.has(user.user_id))
                             .first(10)
                             .map((user, position) => `(${position + 1}) ${interaction.guild.members.cache.get(user.user_id).displayName}: ${user.balance}💰`)
