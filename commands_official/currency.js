@@ -44,7 +44,7 @@ module.exports = {
                 .setDescription("Displays the leaderboard.")),
     async execute(interaction) {
         const items = await dbObjects.CurrencyShop.findAll()
-        const itemOptions = items.map(i => {
+        const itemOptions = await items.map(i => {
             return {label: `${i.name}`, value: `${i.id}`};
         });
 
