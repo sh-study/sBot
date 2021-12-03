@@ -5,8 +5,8 @@ const dbObjects = require("../dbObjects.js");
 module.exports = {
     data:
         new Builder.SlashCommandBuilder()
-            .setName("client.currency")
-            .setDescription("client.currency commands")
+            .setName("currency")
+            .setDescription("currency commands")
             .addSubcommand(subcommand => subcommand
                 .setName("balance")
                 .setDescription("Check your money!")
