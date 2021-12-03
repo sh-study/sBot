@@ -1,13 +1,12 @@
 const Builder = require("@discordjs/builders");
 const Discord = require("discord.js");
 const dbObjects = require("../dbObjects.js");
-const currency = require("../index.js");
 
 module.exports = {
     data:
         new Builder.SlashCommandBuilder()
-            .setName("currency")
-            .setDescription("currency commands")
+            .setName("client.currency")
+            .setDescription("client.currency commands")
             .addSubcommand(subcommand => subcommand
                 .setName("balance")
                 .setDescription("Check your money!")
@@ -22,7 +21,7 @@ module.exports = {
                     .setDescription("Text the member who you want to input.")))
             .addSubcommand(subcommand => subcommand
                 .setName("transfer")
-                .setDescription("Transfer currency to another member.")
+                .setDescription("Transfer client.currency to another member.")
                 .addUserOption(option => option
                     .setName("user")
                     .setDescription("Text the member who you want to input.")
@@ -52,7 +51,7 @@ module.exports = {
         switch (interaction.options.getSubcommand()) {
             case "balance":
                 const balanceTarget = interaction.options.getMember("user") ?? interaction.member;
-                return interaction.reply(`${balanceTarget.displayName} has ${currency.getBalance(balanceTarget.id)}💰`);
+                return interaction.reply(`${balanceTarget.displayName} has ${client.currency.getBalance(balanceTarget.id)}💰`);
             case "inventory":
                 const inventoryTarget = interaction.options.getMember("user") ?? interaction.member;
                 const user = await dbObjects.Users.findOne({where: {user_id: inventoryTarget.id}})
@@ -62,7 +61,7 @@ module.exports = {
                 
                 return interaction.reply(`${inventoryTarget.displayName} has ${Discord.Formatters.codeBlock(items.map(i => `${i.name} ${i.amount}`).join('\n'))}`);
             case "transfer":
-                const currentAmount = currency.getBalance(interaction.user.id);
+                const currentAmount = client.currency.getBalance(interaction.user.id);
                 const transferAmount = interaction.options.getInteger("amount");
                 const transferTarget = interaction.options.getMember("user");
 
@@ -71,10 +70,10 @@ module.exports = {
                 if (transferAmount > currentAmount) return interaction.reply(`Sorry ${interaction.member.displayName}, you only have ${currentAmount}💰.`);
                 if (transferAmount <= 0) return interaction.reply(`Please enter an amount greater than zero, ${interaction.member.displayName}.`);
 
-                currency.add(interaction.user.id, -transferAmount);
-                currency.add(transferTarget.id, transferAmount);
+                client.currency.add(interaction.user.id, -transferAmount);
+                client.currency.add(transferTarget.id, transferAmount);
 
-                return interaction.reply(`Successfully transferred ${transferAmount}💰 to ${transferTarget.displayName}. Your current balance is ${currency.getBalance(interaction.user.id)}💰`);
+                return interaction.reply(`Successfully transferred ${transferAmount}💰 to ${transferTarget.displayName}. Your current balance is ${client.currency.getBalance(interaction.user.id)}💰`);
             case "buy":
                 const buyRow = new Discord.MessageActionRow()
                     .addComponents(
@@ -98,9 +97,9 @@ module.exports = {
                 return interaction.reply(Discord.Formatters.codeBlock(itemsAll.map(i => `${i.name}: ${i.cost}💰`).join("\n")));
             case "leaderboard":
                 let block = null;
-                if (currency.size) {
+                if (client.currency.size) {
                     block = Discord.Formatters.codeBlock(
-                        currency.sort((a, b) => b.balance - a.balance)
+                        client.currency.sort((a, b) => b.balance - a.balance)
                             .filter(user => interaction.guild.members.cache.has(user.user_id))
                             .first(10)
                             .map((user, position) => `(${position + 1}) ${interaction.guild.members.cache.get(user.user_id).displayName}: ${user.balance}💰`)

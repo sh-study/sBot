@@ -37,13 +37,11 @@ commandFileInit("./commands_jc");
 commandFileInit("./commands_official");
 commandFileInit("./commands_demo");
 
-const currency = new Discord.Collection();
+client.currency = new Discord.Collection();
 
-module.exports = currency;
-
-Reflect.defineProperty(currency, "add", {
+Reflect.defineProperty(client.currency, "add", {
     value: async function add(id, amount) {
-        const user = currency.get(id);
+        const user = client.currency.get(id);
 
         if (user) {
             user.balance += Number(amount);
@@ -51,18 +49,20 @@ Reflect.defineProperty(currency, "add", {
         }
 
         const newUser = await dbObjects.Users.create({user_id: id, balance: amount});
-        currency.set(id, newUser);
+        client.currency.set(id, newUser);
 
         return newUser;
     }
 });
 
-Reflect.defineProperty(currency, "getBalance", {
+Reflect.defineProperty(client.currency, "getBalance", {
     value: function getBalance(id) {
-        const user = currency.get(id);
+        const user = client.currency.get(id);
         return user ? user.balance : 0;
     }
 });
+
+module.exports = client.currency;
 
 const eventFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"));
 
@@ -78,8 +78,8 @@ for (const file of eventFiles) {
 client.on("messageCreate", async message => {
     if (message.author.bot) return;
 
-    if (message.content == "__test") return currency.add(message.author.id, 30);
-    currency.add(message.author.id, 1);
+    if (message.content == "__test") return client.currency.add(message.author.id, 30);
+    client.currency.add(message.author.id, 1);
 });
 
 client.login(process.env.token);

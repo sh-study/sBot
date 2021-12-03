@@ -1,5 +1,4 @@
 const dbObjects = require("../dbObjects.js");
-const currency = require("../index.js");
 
 module.exports = {
     name: "ready",
@@ -14,7 +13,7 @@ module.exports = {
         });
     
         const storedBalances = await dbObjects.Users.findAll();
-        storedBalances.forEach(b => currency.set(b.user_id, b));
+        storedBalances.forEach(b => client.currency.set(b.user_id, b));
     
         console.log("Ready!");
     }
