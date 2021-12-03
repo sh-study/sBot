@@ -62,8 +62,6 @@ Reflect.defineProperty(client.currency, "getBalance", {
     }
 });
 
-module.exports = client.currency;
-
 const eventFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"));
 
 for (const file of eventFiles) {
