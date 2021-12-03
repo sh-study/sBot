@@ -51,7 +51,7 @@ module.exports = {
         switch (interaction.options.getSubcommand()) {
             case "balance":
                 const balanceTarget = interaction.options.getMember("user") ?? interaction.member;
-                return interaction.reply(`${balanceTarget.displayName} has ${client.currency.getBalance(balanceTarget.id)}💰`);
+                return interaction.reply(`${balanceTarget.displayName} has ${interaction.client.currency.getBalance(balanceTarget.id)}💰`);
             case "inventory":
                 const inventoryTarget = interaction.options.getMember("user") ?? interaction.member;
                 const user = await dbObjects.Users.findOne({where: {user_id: inventoryTarget.id}})
@@ -70,8 +70,8 @@ module.exports = {
                 if (transferAmount > currentAmount) return interaction.reply(`Sorry ${interaction.member.displayName}, you only have ${currentAmount}💰.`);
                 if (transferAmount <= 0) return interaction.reply(`Please enter an amount greater than zero, ${interaction.member.displayName}.`);
 
-                client.currency.add(interaction.user.id, -transferAmount);
-                client.currency.add(transferTarget.id, transferAmount);
+                interaction.client.currency.add(interaction.user.id, -transferAmount);
+                interaction.client.currency.add(transferTarget.id, transferAmount);
 
                 return interaction.reply(`Successfully transferred ${transferAmount}💰 to ${transferTarget.displayName}. Your current balance is ${client.currency.getBalance(interaction.user.id)}💰`);
             case "buy":
@@ -97,7 +97,7 @@ module.exports = {
                 return interaction.reply(Discord.Formatters.codeBlock(itemsAll.map(i => `${i.name}: ${i.cost}💰`).join("\n")));
             case "leaderboard":
                 let block = null;
-                if (client.currency.size) {
+                if (interaction.client.currency.size) {
                     block = Discord.Formatters.codeBlock(
                         client.currency.sort((a, b) => b.balance - a.balance)
                             .filter(user => interaction.guild.members.cache.has(user.user_id))
