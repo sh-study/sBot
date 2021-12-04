@@ -61,7 +61,7 @@ module.exports = {
                 
                 return interaction.reply(`${inventoryTarget.displayName} has ${Discord.Formatters.codeBlock(items.map(i => `${i.name} ${i.amount}`).join('\n'))}`);
             case "transfer":
-                const currentAmount = await client.currency.getBalance(interaction.user.id);
+                const currentAmount = await interaction.client.currency.getBalance(interaction.user.id);
                 const transferAmount = await interaction.options.getInteger("amount");
                 const transferTarget = await interaction.options.getMember("user");
 
