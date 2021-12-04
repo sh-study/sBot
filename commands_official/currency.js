@@ -73,7 +73,7 @@ module.exports = {
                 await interaction.client.currency.add(interaction.user.id, -transferAmount);
                 await interaction.client.currency.add(transferTarget.id, transferAmount);
 
-                return interaction.reply(`Successfully transferred ${transferAmount}💰 to ${transferTarget.displayName}. Your current balance is ${client.currency.getBalance(interaction.user.id)}💰`);
+                return interaction.reply(`Successfully transferred ${transferAmount}💰 to ${transferTarget.displayName}. Your current balance is ${interaction.client.currency.getBalance(interaction.user.id)}💰`);
             case "buy":
                 const buyRow = new Discord.MessageActionRow()
                     .addComponents(
