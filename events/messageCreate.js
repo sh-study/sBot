@@ -4,7 +4,10 @@ module.exports = {
     async execute(message) {
         if (message.author.bot) return;
 
-        if (message.content == "__test") return client.currency.add(message.author.id, 30);
+        if (message.content == "__test") {
+            message.client.currency.add(message.author.id, 30);
+            return message.delete();
+        }
         message.client.currency.add(message.author.id, 1);
     }
 };
