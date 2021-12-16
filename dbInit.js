@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize("database", "username", "password", {
+const sequelize = new Sequelize("database", "root", process.env.password, {
     host: "localhost",
     dialect: "sqlite",
     logging: false,
