@@ -2,6 +2,7 @@ const fs = require("fs");
 const Rest = require("@discordjs/rest");
 const Api = require("discord-api-types/v9");
 const config = require("./config.json");
+require("dotenv").config();
 
 const commandFileInit = (path, cmd) => {
     const commandFiles = fs.readdirSync(path).filter(file => file.endsWith(".js"));
