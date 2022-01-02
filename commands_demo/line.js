@@ -6,5 +6,6 @@ module.exports = {
             .setName("line")
             .setDescription("Bot will send a line."),
     async execute(interaction) {
-        await interaction.reply("-----------------------------------------------------------------------------");    }
+        await interaction.reply("-----------------------------------------------------------------------------");
+    }
 };

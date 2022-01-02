@@ -20,7 +20,7 @@ commandFileInit("./commands_official", cmd_ofl);
 const cmd_demo = [];
 commandFileInit("./commands_demo", cmd_demo);
 
-const rest = new Rest.REST({version: '9'}).setToken(config.token);
+const rest = new Rest.REST({version: '9'}).setToken(process.env.token);
 
 (async () => {
     try {
