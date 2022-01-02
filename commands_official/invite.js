@@ -5,7 +5,7 @@ module.exports = {
     data:
         new Builder.SlashCommandBuilder()
             .setName("invite")
-            .setDescription("invite me to other server!"),
+            .setDescription("Invite me to other servers!"),
     async execute(interaction) {
         const row = new Discord.MessageActionRow()
             .addComponents(
