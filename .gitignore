@@ -2,4 +2,4 @@
 config.json
 .DS_Store
 .env
-commands_jc
+commands_jc/
