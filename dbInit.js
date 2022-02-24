@@ -18,7 +18,8 @@ sequelize.sync({ force }).then(async () => {
         CurrencyShop.upsert({ name: "Tea", cost: 15 }),
         CurrencyShop.upsert({ name: "Cookie", cost: 30 }),
         CurrencyShop.upsert({ name: "Coffee", cost: 20 }),
-        CurrencyShop.upsert({ name: "Cake", cost: 1000 })
+        CurrencyShop.upsert({ name: "Cake", cost: 1000 }),
+        CurrencyShop.upsert({ name: "Lemonade", cost: 500 })
     ];
 
     await Promise.all(shop);
