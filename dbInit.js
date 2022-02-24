@@ -13,11 +13,12 @@ require("./models/UserItems.js")(sequelize, Sequelize.DataTypes);
 
 const force = process.argv.includes("--force") || process.argv.includes("-f");
 
-sequelize.sync({force}).then(async () => {
+sequelize.sync({ force }).then(async () => {
     const shop = [
-        CurrencyShop.upsert({name: "Tea", cost: 15}),
-        CurrencyShop.upsert({name: "Cookie", cost: 30}),
-        CurrencyShop.upsert({name: "Coffee", cost: 20})
+        CurrencyShop.upsert({ name: "Tea", cost: 15 }),
+        CurrencyShop.upsert({ name: "Cookie", cost: 30 }),
+        CurrencyShop.upsert({ name: "Coffee", cost: 20 }),
+        CurrencyShop.upsert({ name: "Cake", cost: 1000 })
     ];
 
     await Promise.all(shop);
