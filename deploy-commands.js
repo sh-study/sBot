@@ -25,24 +25,26 @@ const rest = new Rest.REST({version: '9'}).setToken(process.env.token);
 
 (async () => {
     try {
-        const ofl_guilds = [config.guild_id_official];
         const jc_guilds = [config.guild_id_jc, config.guild_id_mannam];
         const demo_guilds = [config.guild_id_demo];
 
-        const parts = [ofl_guilds, jc_guilds, demo_guilds];
+        const parts = [jc_guilds, demo_guilds];
         let cmd = [];
         console.log(`Started refreshing application commands.`);
         for (const part of parts) {
-            if (part == ofl_guilds) cmd = cmd_ofl;
-            if (part == jc_guilds) cmd = cmd_jc.concat(cmd_ofl);
+            if (part == jc_guilds) cmd = cmd_jc;
             if (part == demo_guilds) cmd = cmd_demo;
             for (const guild of part) {
                 await rest.put(
                     Api.Routes.applicationGuildCommands(config.client_id, guild),
-                    {body: cmd}
+                    { body: cmd }
                 );
             }
         }
+        await rest.put(
+            Api.Routes.applicationCommands(config.client_id),
+            { body: cmd_ofl }
+        );
         console.log(`Successfully registered application commands.`);
 
     } catch (error) {
