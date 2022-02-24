@@ -30,8 +30,8 @@ module.exports = {
                     case "buyItem":
                         const buyItem = await dbObjects.CurrencyShop.findOne({where: {id: {[Sequelize.Op.like]: interaction.values}}});
     
-                        if (buyItem.cost > client.currency.getBalance(interaction.user.id)) {
-                            return interaction.update({content: `You currently have ${client.currency.getBalance(interaction.user.id)}, but the ${buyItem.name} costs ${buyItem.cost}💰.`, components: []});
+                        if (buyItem.cost > interaction.client.currency.getBalance(interaction.user.id)) {
+                            return interaction.update({content: `You currently have ${interaction.client.currency.getBalance(interaction.user.id)}, but the ${buyItem.name} costs ${buyItem.cost}💰.`, components: []});
                         }
     
                         interaction.client.currency.add(interaction.user.id, -buyItem.cost);
